@@ -1,0 +1,65 @@
+{% extends 'core/admin_base.html' %}
+
+{% block title %}All Slots{% endblock %}
+{% block page_title %}Booked Slots{% endblock %}
+
+{% block content %}
+
+<div class="glass-card">
+
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h5 class="mb-0">All Booked Charging Slots</h5>
+    <span class="badge bg-success">Live Data</span>
+  </div>
+
+  <div class="table-responsive">
+    <table class="table table-dark table-hover align-middle mb-0">
+      <thead>
+        <tr class="text-secondary">
+          <th>User</th>
+          <th>Station</th>
+          <th>Start Time</th>
+          <th>End Time</th>
+          <th>Hotel</th>
+        </tr>
+      </thead>
+      <tbody>
+
+        {% for r in all_reservations %}
+        <tr>
+          <td>
+            <i class="bi bi-person-circle text-info me-1"></i>
+            {{ r.user.username }}
+          </td>
+
+          <td>
+            <i class="bi bi-lightning-charge text-warning me-1"></i>
+            {{ r.station.name }}
+          </td>
+
+          <td>{{ r.start_time|date:"M d, Y H:i" }}</td>
+          <td>{{ r.end_time|date:"M d, Y H:i" }}</td>
+
+          <td>
+            {% if r.booked_hotel %}
+              <span class="badge bg-primary">{{ r.booked_hotel }}</span>
+            {% else %}
+              <span class="text-secondary">—</span>
+            {% endif %}
+          </td>
+        </tr>
+        {% empty %}
+        <tr>
+          <td colspan="5" class="text-center text-secondary py-4">
+            No bookings available
+          </td>
+        </tr>
+        {% endfor %}
+
+      </tbody>
+    </table>
+  </div>
+
+</div>
+
+{% endblock %}

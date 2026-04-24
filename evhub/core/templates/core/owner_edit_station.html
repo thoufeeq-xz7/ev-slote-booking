@@ -1,0 +1,94 @@
+{% extends 'core/owner_base.html' %}
+{% block title %}Edit Station - EVHub Owner{% endblock %}
+
+{% block content %}
+<div style="display: flex; min-height: 100vh;">
+
+    <!-- Main Content -->
+    <div style="flex-grow: 1; margin-left: 250px; padding: 20px; background-color: #f7fafc;">
+        <div class="container">
+            <div class="row mb-4">
+                <div class="col-md-12">
+                    <h1>Edit Charging Station</h1>
+                    <p class="text-muted">Update station details</p>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-8">
+                    <div class="card border-0 shadow-sm">
+                        <div class="card-body">
+                            <form method="POST">
+                                {% csrf_token %}
+
+                                <div class="mb-3">
+                                    <label class="form-label" for="id_name">Station Name *</label>
+                                    <input type="text" class="form-control" id="id_name" name="name" value="{{ station.name }}" placeholder="Station Name" required>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label class="form-label" for="id_location">Location/Address *</label>
+                                    <input type="text" class="form-control" id="id_location" name="location" value="{{ station.location }}" placeholder="Location/Address" required>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label class="form-label" for="id_latitude">Latitude</label>
+                                            <input type="number" class="form-control" id="id_latitude" name="latitude" value="{{ station.latitude }}" step="0.000001" placeholder="Latitude">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label class="form-label" for="id_longitude">Longitude</label>
+                                            <input type="number" class="form-control" id="id_longitude" name="longitude" value="{{ station.longitude }}" step="0.000001" placeholder="Longitude">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label class="form-label" for="id_total_ports">Total Charging Ports *</label>
+                                    <input type="number" class="form-control" id="id_total_ports" name="total_ports" value="{{ station.total_ports }}" min="1" required>
+                                </div>
+
+                                <div class="form-check mb-3">
+                                    <input class="form-check-input" type="checkbox" id="id_ultra_fast" name="ultra_fast" {% if station.ultra_fast %}checked{% endif %}>
+                                    <label class="form-check-label" for="id_ultra_fast">
+                                        Ultra Fast Charging (50kW+)
+                                    </label>
+                                </div>
+
+                                <div class="form-check mb-3">
+                                    <input class="form-check-input" type="checkbox" id="id_powered_by_renewables" name="powered_by_renewables" {% if station.powered_by_renewables %}checked{% endif %}>
+                                    <label class="form-check-label" for="id_powered_by_renewables">
+                                        Powered by Renewable Energy
+                                    </label>
+                                </div>
+
+                                <div class="d-grid gap-2">
+                                    <button type="submit" class="btn btn-primary btn-lg">Update Station</button>
+                                    <a href="{% url 'owner_manage_stations' %}" class="btn btn-secondary">Cancel</a>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="card border-0 shadow-sm bg-light">
+                        <div class="card-body">
+                            <h5 class="card-title">📋 Station Info</h5>
+                            <p class="small text-muted mb-2">
+                                <strong>Created:</strong> {{ owner_station.created_at|date:"Y-m-d H:i" }}
+                            </p>
+                            <p class="small text-muted">
+                                <strong>Last Updated:</strong> {{ owner_station.updated_at|date:"Y-m-d H:i" }}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

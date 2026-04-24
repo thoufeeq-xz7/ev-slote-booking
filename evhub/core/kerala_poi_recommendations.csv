@@ -1,0 +1,143 @@
+district,poi_name,category,latitude,longitude
+Thiruvananthapuram,The Leela Kovalam,hotel,8.3970,76.9800
+Thiruvananthapuram,Padmanabhaswamy Temple,landmark,8.4845,76.9427
+Thiruvananthapuram,Taj Green Hotel,hotel,8.5241,76.9366
+Thiruvananthapuram,Arya Restaurant,restaurant,8.5250,76.9350
+Thiruvananthapuram,Veli Tourist Village,attraction,8.5080,76.8910
+Thiruvananthapuram,Museum & Zoo,attraction,8.5401,76.9472
+Thiruvananthapuram,Kovalam Beach,attraction,8.4110,76.9510
+Thiruvananthapuram,Kashi Art Cafe (Trivandrum),cafe,8.4905,76.9455
+Thiruvananthapuram,Kowdiar Palace,landmark,8.5130,76.9650
+Thiruvananthapuram,Hyatt Regency Trivandrum,hotel,8.4920,76.9600
+
+Kollam,The Raviz Ashtamudi,hotel,8.8895,76.5920
+Kollam,The Quilon Inn,hotel,8.8932,76.6141
+Kollam,Ashtamudi Lake,attraction,8.8820,76.6000
+Kollam,Villa Restaurant,restaurant,8.8950,76.6150
+Kollam,Thangassery Lighthouse,landmark,8.8795,76.5775
+Kollam,Munroe Island,attraction,9.0010,76.6690
+Kollam,Ramees Restaurant,restaurant,8.8955,76.6080
+Kollam,Kollam Beach,attraction,8.8800,76.5820
+Kollam,Sree Narayana Mandiram,landmark,8.9001,76.6115
+Kollam,The Gateway Hotel Varkala,hotel,8.7300,76.7110
+Pathanamthitta,River View Hotel,hotel,9.2646,76.7878
+Pathanamthitta,Sabarimala Temple,attraction,9.4500,76.9900
+Pathanamthitta,Aranmula Parthasarathy Temple,landmark,9.3305,76.6870
+Pathanamthitta,Spice Corner,restaurant,9.2650,76.7880
+Pathanamthitta,Konni Elephant Training Centre,attraction,9.2230,76.8450
+Pathanamthitta,Gavi Eco-Tourism,attraction,9.4000,77.1000
+Pathanamthitta,Hotel Aida,hotel,9.2710,76.7852
+Pathanamthitta,V-Cafe & Grill,cafe,9.2675,76.7865
+Pathanamthitta,Perunthenaruvi Waterfalls,attraction,9.4200,76.9000
+Pathanamthitta,Kadamanitta Devi Temple,landmark,9.2450,76.8150
+Alappuzha,Lake Palace Resort,hotel,9.4977,76.3262
+Alappuzha,Alappuzha Beach,attraction,9.4930,76.3248
+Alappuzha,Houseboat Docking Area,attraction,9.5000,76.3350
+Alappuzha,Thaff Delicacy,restaurant,9.5015,76.3360
+Alappuzha,Marari Beach Resort,hotel,9.6100,76.3000
+Alappuzha,Ambalappuzha Temple,landmark,9.4180,76.3680
+Alappuzha,Floating Cafe,cafe,9.4990,76.3305
+Alappuzha,Krishnapuram Palace,landmark,9.1760,76.4950
+Alappuzha,Kuttanad Paddy Fields,attraction,9.4500,76.4000
+Alappuzha,Raheem Residency,hotel,9.4925,76.3255
+Kottayam,Kumarakom Lake Resort,hotel,9.6000,76.4150
+Kottayam,Kumarakom Bird Sanctuary,attraction,9.6100,76.4250
+Kottayam,Ilaveezha Poonchira,attraction,9.7710,76.7900
+Kottayam,Vaikom Mahadeva Temple,landmark,9.7560,76.3900
+Kottayam,Marmala Waterfall,attraction,9.7700,76.7450
+Kottayam,Backwater Cafe (Kumarakom),cafe,9.6050,76.4050
+Kottayam,Aida Hotel (Kottayam),hotel,9.5930,76.5350
+Kottayam,Nila Restaurant,restaurant,9.5945,76.5330
+Kottayam,St. Alphonsa's Tomb,landmark,9.5600,76.6900
+Kottayam,Bay Island Driftwood Museum,attraction,9.6120,76.4300
+Idukki,Thekkady Woods (Periyar),hotel,9.5950,77.1650
+Idukki,Munnar Tea Gardens,attraction,10.0890,77.0590
+Idukki,Idukki Arch Dam,landmark,9.8580,76.9850
+Idukki,Periyar National Park,attraction,9.4000,77.1500
+Idukki,Spice Garden Restaurant,restaurant,9.6000,77.1600
+Idukki,Club Mahindra Munnar,hotel,10.0750,77.0200
+Idukki,Mattupetty Dam,attraction,10.0980,77.1250
+Idukki,Grand View Hotel (Thekkady),hotel,9.6050,77.1550
+Idukki,Carmelagiri Elephant Park,attraction,10.0700,77.0800
+Idukki,Sarang Curry House,restaurant,10.0850,77.0650
+Ernakulam,Grand Hyatt Kochi Bolgatty,hotel,9.9815,76.2690
+Ernakulam,Fort Kochi & Chinese Nets,attraction,9.9630,76.2410
+Ernakulam,Marine Drive,attraction,9.9700,76.2840
+Ernakulam,Dhe Puttu (Restaurant),restaurant,10.0020,76.3075
+Ernakulam,Le Méridien Kochi,hotel,9.9320,76.3200
+Ernakulam,Jewish Synagogue (Mattancherry),landmark,9.9570,76.2640
+Ernakulam,Chai Wallah (Kochi),cafe,9.9688,76.2801
+Ernakulam,Lulu Mall,attraction,10.0150,76.3200
+Ernakulam,Willingdon Island,landmark,9.9400,76.2800
+Ernakulam,Pepper House Cafe,cafe,9.9680,76.2450
+Thrissur,Athirappilly Waterfalls,attraction,10.2950,76.5650
+Thrissur,Guruvayur Temple,landmark,10.6010,76.0350
+Thrissur,Punnathur Kotta (Elephant Sanctuary),attraction,10.6120,76.0150
+Thrissur,Mannapuram Hotel,hotel,10.5150,76.2100
+Thrissur,Vazhachal Waterfalls,attraction,10.3000,76.5800
+Thrissur,Vadakkunnathan Temple,landmark,10.5200,76.2170
+Thrissur,Taste of Thrissur (Restaurant),restaurant,10.5180,76.2120
+Thrissur,Chettuva Backwaters,attraction,10.5400,76.0700
+Thrissur,Hotel Niya Regency,hotel,10.5100,76.2150
+Thrissur,Snehatheeram Beach,attraction,10.5250,76.0200
+Palakkad,Malampuzha Dam & Gardens,attraction,10.8200,76.6800
+Palakkad,Silent Valley National Park,attraction,11.1000,76.4500
+Palakkad,Palakkad Fort (Tipu's Fort),landmark,10.7680,76.6560
+Palakkad,Nelliyampathy Hills,attraction,10.5000,76.8500
+Palakkad,Indraprastha Hotel,hotel,10.7850,76.6500
+Palakkad,Olavakkode Railway Restaurant,restaurant,10.8000,76.6600
+Palakkad,Parambikulam Tiger Reserve,attraction,10.4200,76.7800
+Palakkad,Kalpathy Heritage Village,landmark,10.7800,76.6550
+Palakkad,Meenvallam Waterfalls,attraction,10.9700,76.4000
+Palakkad,Green Land Resort,hotel,10.7500,76.7000
+Malappuram,Nilambur Teak Museum,attraction,11.2750,76.2600
+Malappuram,Kottakkunnu (Fort Hill),attraction,11.0500,76.0680
+Malappuram,Thirunavaya Temple,landmark,10.8750,75.9550
+Malappuram,Adyanpara Waterfalls,attraction,11.3500,76.2000
+Malappuram,Hotel Pookalam,hotel,11.0350,76.0750
+Malappuram,Valanchery Cafe,cafe,10.8900,76.0500
+Malappuram,Kadalundi Bird Sanctuary,attraction,11.1000,75.8700
+Malappuram,Padinharekara Beach,attraction,10.8800,75.8900
+Malappuram,K. R. Bakes & Restaurant,restaurant,11.0550,76.0650
+Malappuram,The River Retreat,hotel,11.0400,76.0600
+Kozhikode,Kozhikode Beach,attraction,11.2505,75.7725
+Kozhikode,The Gateway Hotel (Beach Road),hotel,11.2500,75.7790
+Kozhikode,Kappad Beach (Vasco da Gama),attraction,11.4000,75.6900
+Kozhikode,Paragon Restaurant,restaurant,11.2490,75.7830
+Kozhikode,Beypore Port,landmark,11.1600,75.8200
+Kozhikode,Tali Temple,landmark,11.2530,75.7730
+Kozhikode,The Puttu (Kozhikode),restaurant,11.2600,75.7900
+Kozhikode,Raviz Calicut,hotel,11.2550,75.7850
+Kozhikode,Thusharagiri Waterfalls,attraction,11.3700,76.0000
+Kozhikode,Mavoor Road Cafe,cafe,11.2480,75.7891
+Wayanad,Edakkal Caves,attraction,11.6360,76.2200
+Wayanad,Chembra Peak (Heart Lake),attraction,11.5200,76.1300
+Wayanad,Banasura Sagar Dam,landmark,11.6490,76.0820
+Wayanad,The Woods Resort,hotel,11.6900,76.0700
+Wayanad,Soochipara Waterfalls,attraction,11.5300,76.1000
+Wayanad,1980's A Nostalgic Cafe,cafe,11.6750,76.1350
+Wayanad,Kuruva Island,attraction,11.7500,76.1200
+Wayanad,Pookode Lake,attraction,11.5760,76.0680
+Wayanad,Green Gates Hotel,hotel,11.6800,76.1400
+Wayanad,Winding Road Restaurant,restaurant,11.6600,76.1200
+
+Kannur,Muzhappilangad Drive-in Beach,attraction,11.7700,75.4900
+Kannur,Kannur Fort (St. Angelo Fort),landmark,11.8550,75.3850
+Kannur,Payyambalam Beach,attraction,11.8700,75.3700
+Kannur,Paithalmala Hill Station,attraction,12.1600,75.5200
+Kannur,Arakkal Museum,landmark,11.8500,75.3650
+Kannur,Hotel Blue Nile,hotel,11.8600,75.3780
+Kannur,Palakkayam Thattu,attraction,12.1800,75.4800
+Kannur,Moidus Hotel,restaurant,11.8750,75.3650
+Kannur,Sea Shell Hotel,hotel,11.8650,75.3750
+Kannur,Madayipara,attraction,12.0300,75.2500
+Kasaragod,Bekal Fort,landmark,12.3830,75.0350
+Kasaragod,Ananthapura Lake Temple,landmark,12.4450,75.0550
+Kasaragod,Kappil Beach,attraction,12.3800,75.0400
+Kasaragod,Valiyaparamba Backwaters,attraction,12.1800,75.1200
+Kasaragod,The Lalit Resort & Spa Bekal,hotel,12.2700,75.0450
+Kasaragod,Chandragiri Fort,landmark,12.4650,74.9650
+Kasaragod,Malik Deenar Mosque,landmark,12.5100,74.9800
+Kasaragod,Viceroy Restaurant,restaurant,12.4900,74.9850
+Kasaragod,Kareem's Forest Park,attraction,12.3500,75.1000
+Kasaragod,Taj Bekal Resort & Spa,hotel,12.3750,75.0250

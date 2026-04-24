@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>EvHub · Dark Registration | Join the EV community</title>
+  <!-- Font Awesome for icons (same as login) -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    }
+
+    body {
+      min-height: 100vh;
+      background: #03080a;  /* deep black base */
+      background-image: 
+        radial-gradient(circle at 20% 30%, rgba(0, 255, 150, 0.12) 0%, transparent 35%),
+        radial-gradient(circle at 85% 70%, rgba(0, 200, 255, 0.08) 0%, transparent 45%),
+        linear-gradient(145deg, #051215 0%, #0a1a1f 100%);
+      position: relative;
+      color: #edf7f0;
+      line-height: 1.6;
+    }
+
+    /* ----- electric dark background (same particles as login) ----- */
+    .ev-bg {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
+      overflow: hidden;
+      pointer-events: none;
+    }
+
+    .particle {
+      position: absolute;
+      width: 3px;
+      height: 3px;
+      background: #a0ffb0;
+      border-radius: 50%;
+      box-shadow: 0 0 20px #2eff7c, 0 0 40px #16ff60;
+      opacity: 0.7;
+      animation: floatDark 20s linear infinite;
+    }
+
+    @keyframes floatDark {
+      0% { transform: translateY(110vh) translateX(0) scale(1); opacity: 0; }
+      15% { opacity: 0.9; }
+      85% { opacity: 0.8; }
+      100% { transform: translateY(-20vh) translateX(60px) scale(0.3); opacity: 0; }
+    }
+
+    .bg-grid {
+      position: absolute;
+      inset: 0;
+      background-image: 
+        repeating-linear-gradient(0deg, transparent, transparent 70px, rgba(0, 255, 150, 0.03) 70px, rgba(0, 255, 200, 0.03) 71px),
+        repeating-linear-gradient(90deg, transparent, transparent 70px, rgba(0, 255, 150, 0.02) 70px, rgba(0, 200, 255, 0.02) 71px);
+      z-index: 0;
+    }
+
+    .ev-silhouette {
+      position: absolute;
+      bottom: 15px;
+      right: 25px;
+      opacity: 0.15;
+      font-size: 8rem;
+      color: #0f0;
+      filter: drop-shadow(0 0 25px #00ff88);
+      transform: rotateY(12deg);
+      z-index: 0;
+    }
+
+    /* header consistent with dark glass */
+    header {
+      text-align: center;
+      padding: 25px 0;
+      background: rgba(0, 15, 12, 0.5);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(80, 255, 150, 0.3);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.6);
+      position: relative;
+      z-index: 20;
+      margin-bottom: 30px;
+    }
+
+    header h1 {
+      font-size: 2.8rem;
+      letter-spacing: -0.5px;
+      font-weight: 700;
+    }
+
+    header h1 span {
+      background: linear-gradient(145deg, #b5ffcb, #5eff8c);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      text-shadow: 0 0 30px #1eff6e;
+    }
+
+    /* main container – same dark mode layout */
+    .container {
+      max-width: 1400px;
+      margin: 0 auto 40px auto;
+      padding: 0 20px;
+      display: flex;
+      gap: 40px;
+      align-items: flex-start;
+      position: relative;
+      z-index: 20;
+    }
+
+    /* left side explanation (glass dark panels) */
+    .explanation-section {
+      flex: 1;
+      padding-right: 20px;
+    }
+
+    .explanation-section h1 {
+      font-size: 2.8em;
+      margin-bottom: 15px;
+      font-weight: 700;
+      line-height: 1.2;
+      text-shadow: 0 2px 10px black;
+    }
+
+    .explanation-section h1 i {
+      color: #90ffa0;
+      filter: drop-shadow(0 0 8px #33ff7c);
+    }
+
+    .explanation-section p {
+      font-size: 1.2rem;
+      margin-bottom: 30px;
+      opacity: 0.9;
+      color: #cddfd5;
+    }
+
+    .benefits-list {
+      list-style: none;
+      padding: 0;
+    }
+
+    .benefit-item {
+      background: rgba(0, 20, 15, 0.35);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border: 1px solid rgba(0, 255, 150, 0.2);
+      border-radius: 24px;
+      padding: 1.4rem 1.8rem;
+      margin-bottom: 16px;
+      box-shadow: 0 18px 30px -10px black, 0 0 0 1px rgba(80, 255, 120, 0.1) inset;
+      transition: 0.2s;
+      color: white;
+      font-size: 1.1rem;
+    }
+
+    .benefit-item:hover {
+      background: rgba(0, 40, 30, 0.6);
+      border-color: rgba(80, 255, 150, 0.6);
+      box-shadow: 0 0 25px #1eff6e33;
+    }
+
+    .benefit-item strong {
+      color: #b0ffc0;
+      font-weight: 700;
+      display: inline-block;
+      margin-right: 10px;
+      text-shadow: 0 0 6px #19ff6e;
+    }
+
+    .benefit-item i {
+      color: #9effb0;
+      margin-right: 8px;
+    }
+
+    /* ----- DARK GLASS REGISTER CARD (centerpiece, same as login) ----- */
+    .register-card {
+      flex: 2;
+      background: rgba(0, 10, 8, 0.4);
+      backdrop-filter: blur(16px) saturate(200%);
+      -webkit-backdrop-filter: blur(16px) saturate(200%);
+      border: 1.5px solid rgba(100, 255, 150, 0.35);
+      border-radius: 48px;
+      padding: 2.8rem 2.5rem;
+      box-shadow: 0 35px 70px rgba(0, 0, 0, 0.8), 0 0 0 1px rgba(0, 255, 150, 0.2) inset, 0 0 50px #14ff6c1a;
+      color: white;
+      position: sticky;
+      top: 40px;
+    }
+
+    .register-card h2 {
+      font-size: 2.3rem;
+      font-weight: 700;
+      text-align: center;
+      border-bottom: 2px solid rgba(100, 255, 150, 0.3);
+      padding-bottom: 18px;
+      margin-bottom: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+    }
+
+    .register-card h2 i {
+      color: #adffc0;
+      filter: drop-shadow(0 0 8px #33ff7c);
+    }
+
+    /* form grid */
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px 22px;
+    }
+
+    .full-width-field {
+      grid-column: 1 / -1;
+    }
+
+    label {
+      font-weight: 600;
+      display: block;
+      margin-bottom: 6px;
+      color: #d0ffdf;
+      text-transform: uppercase;
+      font-size: 0.85rem;
+      letter-spacing: 0.5px;
+      text-shadow: 0 0 5px black;
+    }
+
+    .required-star {
+      color: #70ffa0;
+      margin-left: 4px;
+    }
+
+    input {
+      width: 100%;
+      padding: 0.9rem 1.5rem;
+      background: rgba(0, 30, 20, 0.3);
+      border: 1.5px solid rgba(70, 255, 140, 0.35);
+      border-radius: 40px;
+      font-size: 1rem;
+      color: white;
+      outline: none;
+      transition: 0.2s;
+      backdrop-filter: blur(5px);
+      box-shadow: 0 5px 18px rgba(0, 0, 0, 0.6);
+    }
+
+    input:focus {
+      border-color: #50ffa0;
+      background: rgba(0, 40, 30, 0.6);
+      box-shadow: 0 0 25px #33ff99, 0 5px 15px black;
+    }
+
+    input::placeholder {
+      color: rgba(160, 255, 190, 0.4);
+      font-weight: 300;
+    }
+
+    /* field errors & help text in dark theme */
+    .field-error {
+      color: #ffb0b0;
+      background: rgba(200, 30, 30, 0.2);
+      border-radius: 40px;
+      padding: 0.3rem 1.2rem;
+      display: inline-block;
+      margin-top: 6px;
+      font-size: 0.8rem;
+      border: 1px solid #ff8888;
+      backdrop-filter: blur(4px);
+    }
+
+    .helper-text {
+      color: #a0caae;
+      font-size: 0.75rem;
+      margin-top: 6px;
+      display: block;
+      padding-left: 12px;
+      opacity: 0.9;
+    }
+
+    button[type="submit"] {
+      width: 100%;
+      background: linear-gradient(125deg, #0b3b1c, #1f9c4a, #2bbd5e);
+      border: none;
+      border-radius: 60px;
+      padding: 1rem 1.8rem;
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: #0b1f14;
+      letter-spacing: 1px;
+      cursor: pointer;
+      transition: 0.2s;
+      box-shadow: 0 15px 30px -3px #0a661e, 0 0 20px #55ff99;
+      border: 1px solid #b0ffc0;
+      margin-top: 28px;
+      text-shadow: 0 1px 2px rgba(255, 255, 255, 0.3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+    }
+
+    button[type="submit"]:hover {
+      background: linear-gradient(125deg, #1f9c4a, #2bbd5e, #6ae685);
+      transform: scale(1.02);
+      box-shadow: 0 20px 40px #0f8028, 0 0 40px #6effb0;
+    }
+
+    .login-link {
+      text-align: center;
+      margin-top: 25px;
+      font-size: 1.05rem;
+    }
+
+    .login-link a {
+      color: #b2ffc0;
+      text-decoration: none;
+      font-weight: 700;
+      border-bottom: 1px solid transparent;
+      transition: 0.2s;
+      text-shadow: 0 0 6px #1aff70;
+    }
+
+    .login-link a:hover {
+      border-bottom-color: #b2ffc0;
+      color: #eafff0;
+    }
+
+    /* small extra details */
+    .ev-footnote {
+      display: flex;
+      justify-content: center;
+      gap: 1.2rem;
+      margin-top: 22px;
+      opacity: 0.4;
+      font-size: 1.3rem;
+    }
+
+    @media(max-width: 1050px){
+      .container {
+        flex-direction: column;
+        gap: 30px;
+      }
+      .explanation-section, .register-card {
+        flex: auto;
+        width: 100%;
+      }
+      .register-card {
+        position: static;
+      }
+      .form-grid {
+        grid-template-columns: 1fr;
+      }
+      .full-width-field {
+        grid-column: auto;
+      }
+    }
+
+    @media(max-width: 500px){
+      .register-card {
+        padding: 2rem 1.5rem;
+      }
+      button[type="submit"] {
+        font-size: 1.2rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- animated dark EV background (same particles as login) -->
+  <div class="ev-bg">
+    <div class="bg-grid"></div>
+    <div class="ev-silhouette">⚡🚘</div>
+    <script>
+      (function() {
+        for (let i = 0; i < 36; i++) {
+          const p = document.createElement('div');
+          p.className = 'particle';
+          const s = Math.random() * 5 + 2;
+          p.style.width = s + 'px';
+          p.style.height = s + 'px';
+          p.style.left = Math.random() * 100 + '%';
+          p.style.animationDuration = (Math.random() * 15 + 12) + 's';
+          p.style.animationDelay = (Math.random() * -15) + 's';
+          p.style.background = `rgba(100, 255, 150, ${Math.random() * 0.9})`;
+          p.style.boxShadow = `0 0 ${Math.random() * 30 + 15}px #44ff88`;
+          document.querySelector('.ev-bg').appendChild(p);
+        }
+      })();
+    </script>
+    <!-- extra deep orbs (same as login) -->
+    <div style="position:absolute; top:10%; left:15%; width:200px; height:200px; background:radial-gradient(circle, #1aff6e0d 0%, transparent 70%); border-radius:50%; filter:blur(40px);"></div>
+    <div style="position:absolute; bottom:5%; left:80%; width:300px; height:300px; background:radial-gradient(circle, #2effb010 0%, transparent 70%); border-radius:50%; filter:blur(60px);"></div>
+  </div>
+
+  <header>
+    <h1><span>Ev</span>Hub · ignite your drive</h1>
+  </header>
+
+  <div class="container">
+    <!-- left side: explanation with dark glass panels -->
+    <section class="explanation-section">
+      <h1>⚡ Ready to drive smarter? <br>Join EvHub for free</h1>
+      <p><i class="fas fa-map-marked-alt" style="color: #70ffa0;"></i> Sign up to access real‑time charging maps, owner forums, and personalized EV tips.</p>
+      
+      <h2 style="margin: 30px 0 15px; display: flex; gap: 10px;"><i class="fas fa-gift"></i> Your free account includes:</h2>
+      <ul class="benefits-list">
+        <li class="benefit-item"><i class="fas fa-star"></i> <strong>Instant access:</strong> Live charging station map with connector details.</li>
+        <li class="benefit-item"><i class="fas fa-users"></i> <strong>Verified community:</strong> Private forums, group rides, and Q&A.</li>
+        <li class="benefit-item"><i class="fas fa-car"></i> <strong>Vehicle profiling:</strong> Save your EV model for incentives & updates.</li>
+        <li class="benefit-item"><i class="fas fa-bell"></i> <strong>Smart alerts:</strong> Price drops, new stations, and local meetups.</li>
+      </ul>
+    </section>
+
+    <!-- DARK GLASS REGISTER CARD (fully matches login aesthetic) -->
+    <aside class="register-card">
+      <h2>
+        <i class="fas fa-pen-fancy"></i> Create your profile
+      </h2>
+
+      <form method="post">
+        {% csrf_token %}
+        <div class="form-grid">
+          {% for field in form %}
+          <div class="{% if field.name in 'username email password1 password2' %}full-width-field{% endif %}">
+            <label>{{ field.label }} {% if field.field.required %}<span class="required-star">*</span>{% endif %}</label>
+            {{ field }}
+            {% if field.help_text %}
+              <span class="helper-text">{{ field.help_text|safe }}</span>
+            {% endif %}
+            {% for error in field.errors %}
+              <span class="field-error"><i class="fas fa-exclamation-circle" style="margin-right: 4px;"></i>{{ error }}</span>
+            {% endfor %}
+          </div>
+          {% endfor %}
+        </div>
+
+        <button type="submit">
+          <i class="fas fa-charging-station"></i> Complete registration
+        </button>
+      </form>
+
+      <div class="login-link">
+        <p><i class="fas fa-arrow-right-to-bracket" style="margin-right: 6px;"></i> Already have an account? <a href="{% url 'login' %}">Log In Here</a></p>
+      </div>
+
+      <!-- subtle ev icons (same as login) -->
+      <div class="ev-footnote">
+        <span>🔋</span> <span>⚡</span> <span>🌑</span> <span>🚗</span>
+      </div>
+    </aside>
+  </div>
+
+  <!-- small js to add placeholders (improves UX) -->
+  <script>
+    (function() {
+      const inputs = document.querySelectorAll('.register-card input');
+      const placeholders = {
+        'username': 'ev_driver_2025',
+        'email': 'you@example.com',
+        'password1': 'create strong password',
+        'password2': 'confirm password'
+      };
+      inputs.forEach(input => {
+        const name = input.name || input.id;
+        if (name && placeholders[name]) {
+          input.placeholder = placeholders[name];
+        } else if (name && name.includes('email')) {
+          input.placeholder = 'name@domain.com';
+        } else if (name && name.includes('username')) {
+          input.placeholder = 'choose a username';
+        }
+      });
+    })();
+  </script>
+</body>
+</html>

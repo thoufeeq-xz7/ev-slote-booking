@@ -1,0 +1,358 @@
+{% extends 'core/admin_base.html' %}
+
+{% block title %}POI Management{% endblock %}
+{% block page_title %}Point of Interest (POI) Management{% endblock %}
+
+{% block content %}
+
+<div class="mb-4 d-flex justify-content-between align-items-center">
+  <h5 class="mb-0">Manage Kerala POI Recommendations</h5>
+  <div class="gap-2 d-flex">
+    <button class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#addPOIModal">
+      <i class="bi bi-plus-circle"></i> Add POI
+    </button>
+    <button class="btn btn-info btn-sm" data-bs-toggle="modal" data-bs-target="#importCSVModal">
+      <i class="bi bi-upload"></i> Import CSV
+    </button>
+  </div>
+</div>
+
+<!-- Stats Cards -->
+<div class="row mb-4">
+  <div class="col-md-3">
+    <div class="glass-card text-center">
+      <div class="mb-2 fs-3 text-info">
+        <i class="bi bi-geo-alt"></i>
+      </div>
+      <h6 class="text-secondary">Total POIs</h6>
+      <h3 class="fw-bold">{{ pois|length }}</h3>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="glass-card text-center">
+      <div class="mb-2 fs-3 text-warning">
+        <i class="bi bi-layers"></i>
+      </div>
+      <h6 class="text-secondary">Districts</h6>
+      <h3 class="fw-bold">{{ districts|length }}</h3>
+    </div>
+  </div>
+</div>
+
+<!-- POI Table -->
+<div class="glass-card">
+  <div class="table-responsive">
+    <table class="table table-dark table-hover align-middle mb-0">
+      <thead>
+        <tr class="text-secondary">
+          <th>POI Name</th>
+          <th>District</th>
+          <th>Category</th>
+          <th>Coordinates</th>
+          <th>Status</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for poi in pois %}
+          <tr>
+            <td>
+              <i class="bi bi-geo-alt text-info me-1"></i>
+              {{ poi.poi_name }}
+            </td>
+            <td>{{ poi.district }}</td>
+            <td>
+              <span class="badge bg-primary">{{ poi.category|title }}</span>
+            </td>
+            <td class="small text-secondary">
+              {{ poi.latitude }}, {{ poi.longitude }}
+            </td>
+            <td>
+              {% if poi.is_active %}
+                <span class="badge bg-success">Active</span>
+              {% else %}
+                <span class="badge bg-danger">Inactive</span>
+              {% endif %}
+            </td>
+            <td>
+              <button class="btn btn-sm btn-warning" onclick="editPOI({{ poi.id }})">
+                <i class="bi bi-pencil"></i>
+              </button>
+              <button class="btn btn-sm btn-danger" onclick="deletePOI({{ poi.id }})">
+                <i class="bi bi-trash"></i>
+              </button>
+            </td>
+          </tr>
+        {% empty %}
+          <tr>
+            <td colspan="6" class="text-center text-secondary py-4">
+              No POIs available. Add one using the button above.
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- Add POI Modal -->
+<div class="modal fade" id="addPOIModal" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content bg-dark text-white">
+      <div class="modal-header border-secondary">
+        <h5 class="modal-title">Add New POI</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+      </div>
+      <form id="addPOIForm">
+        <div class="modal-body">
+          <div class="mb-3">
+            <label class="form-label">District</label>
+            <input type="text" class="form-control bg-secondary text-white border-0" id="poiDistrict" required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">POI Name</label>
+            <input type="text" class="form-control bg-secondary text-white border-0" id="poiName" required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Category</label>
+            <select class="form-select bg-secondary text-white border-0" id="poiCategory" required>
+              <option value="">Select Category</option>
+              <option value="hotel">Hotel</option>
+              <option value="restaurant">Restaurant</option>
+              <option value="cafe">Cafe</option>
+              <option value="attraction">Attraction</option>
+              <option value="landmark">Landmark</option>
+            </select>
+          </div>
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <label class="form-label">Latitude</label>
+              <input type="number" class="form-control bg-secondary text-white border-0" id="poiLatitude" step="0.000001" required>
+            </div>
+            <div class="col-md-6 mb-3">
+              <label class="form-label">Longitude</label>
+              <input type="number" class="form-control bg-secondary text-white border-0" id="poiLongitude" step="0.000001" required>
+            </div>
+          </div>
+          <div class="form-check">
+            <input class="form-check-input" type="checkbox" id="poiActive" checked>
+            <label class="form-check-label" for="poiActive">
+              Active
+            </label>
+          </div>
+        </div>
+        <div class="modal-footer border-secondary">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+          <button type="button" class="btn btn-success" onclick="submitAddPOI()">Add POI</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- Edit POI Modal -->
+<div class="modal fade" id="editPOIModal" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content bg-dark text-white">
+      <div class="modal-header border-secondary">
+        <h5 class="modal-title">Edit POI</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+      </div>
+      <form id="editPOIForm">
+        <input type="hidden" id="editPoiId">
+        <div class="modal-body">
+          <div class="mb-3">
+            <label class="form-label">District</label>
+            <input type="text" class="form-control bg-secondary text-white border-0" id="editPoiDistrict" required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">POI Name</label>
+            <input type="text" class="form-control bg-secondary text-white border-0" id="editPoiName" required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Category</label>
+            <select class="form-select bg-secondary text-white border-0" id="editPoiCategory" required>
+              <option value="">Select Category</option>
+              <option value="hotel">Hotel</option>
+              <option value="restaurant">Restaurant</option>
+              <option value="cafe">Cafe</option>
+              <option value="attraction">Attraction</option>
+              <option value="landmark">Landmark</option>
+            </select>
+          </div>
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <label class="form-label">Latitude</label>
+              <input type="number" class="form-control bg-secondary text-white border-0" id="editPoiLatitude" step="0.000001" required>
+            </div>
+            <div class="col-md-6 mb-3">
+              <label class="form-label">Longitude</label>
+              <input type="number" class="form-control bg-secondary text-white border-0" id="editPoiLongitude" step="0.000001" required>
+            </div>
+          </div>
+          <div class="form-check">
+            <input class="form-check-input" type="checkbox" id="editPoiActive">
+            <label class="form-check-label" for="editPoiActive">
+              Active
+            </label>
+          </div>
+        </div>
+        <div class="modal-footer border-secondary">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+          <button type="button" class="btn btn-primary" onclick="submitEditPOI()">Save Changes</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- Import CSV Modal -->
+<div class="modal fade" id="importCSVModal" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content bg-dark text-white">
+      <div class="modal-header border-secondary">
+        <h5 class="modal-title">Import POI from CSV</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+      </div>
+      <form id="importCSVForm" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="modal-body">
+          <div class="mb-3">
+            <label class="form-label">CSV File</label>
+            <input type="file" class="form-control bg-secondary text-white border-0" id="csvFile" name="csv_file" accept=".csv" required>
+            <small class="text-muted d-block mt-2">
+              CSV should contain columns: district, poi_name, category, latitude, longitude
+            </small>
+          </div>
+        </div>
+        <div class="modal-footer border-secondary">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+          <button type="button" class="btn btn-info" onclick="submitImportCSV()">Import</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<script>
+function submitAddPOI() {
+  const formData = new FormData();
+  formData.append('district', document.getElementById('poiDistrict').value);
+  formData.append('poi_name', document.getElementById('poiName').value);
+  formData.append('category', document.getElementById('poiCategory').value);
+  formData.append('latitude', document.getElementById('poiLatitude').value);
+  formData.append('longitude', document.getElementById('poiLongitude').value);
+  formData.append('is_active', document.getElementById('poiActive').checked);
+
+  fetch('{% url "admin_poi_add" %}', {
+    method: 'POST',
+    headers: {
+      'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]')?.value || '{% csrf_token %}'
+    },
+    body: formData
+  })
+  .then(r => r.json())
+  .then(d => {
+    alert(d.success || d.error);
+    if (d.success) {
+      location.reload();
+    }
+  });
+}
+
+function editPOI(poiId) {
+  fetch(`/admin/poi/edit/${poiId}/`)
+    .then(r => r.json())
+    .then(d => {
+      document.getElementById('editPoiId').value = d.id;
+      document.getElementById('editPoiDistrict').value = d.district;
+      document.getElementById('editPoiName').value = d.poi_name;
+      document.getElementById('editPoiCategory').value = d.category;
+      document.getElementById('editPoiLatitude').value = d.latitude;
+      document.getElementById('editPoiLongitude').value = d.longitude;
+      document.getElementById('editPoiActive').checked = d.is_active;
+      new bootstrap.Modal(document.getElementById('editPOIModal')).show();
+    });
+}
+
+function submitEditPOI() {
+  const poiId = document.getElementById('editPoiId').value;
+  const formData = new FormData();
+  formData.append('district', document.getElementById('editPoiDistrict').value);
+  formData.append('poi_name', document.getElementById('editPoiName').value);
+  formData.append('category', document.getElementById('editPoiCategory').value);
+  formData.append('latitude', document.getElementById('editPoiLatitude').value);
+  formData.append('longitude', document.getElementById('editPoiLongitude').value);
+  formData.append('is_active', document.getElementById('editPoiActive').checked);
+
+  fetch(`/admin/poi/edit/${poiId}/`, {
+    method: 'POST',
+    headers: {
+      'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]')?.value || '{% csrf_token %}'
+    },
+    body: formData
+  })
+  .then(r => r.json())
+  .then(d => {
+    alert(d.success || d.error);
+    if (d.success) {
+      location.reload();
+    }
+  });
+}
+
+function deletePOI(poiId) {
+  if (confirm('Are you sure you want to delete this POI?')) {
+    const formData = new FormData();
+    fetch(`/admin/poi/delete/${poiId}/`, {
+      method: 'POST',
+      headers: {
+        'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]')?.value || '{% csrf_token %}'
+      },
+      body: formData
+    })
+    .then(r => r.json())
+    .then(d => {
+      alert(d.success || d.error);
+      if (d.success) {
+        location.reload();
+      }
+    });
+  }
+}
+
+function submitImportCSV() {
+  const file = document.getElementById('csvFile').files[0];
+  if (!file) {
+    alert('Please select a CSV file');
+    return;
+  }
+
+  const formData = new FormData(document.getElementById('importCSVForm'));
+  
+  fetch('{% url "admin_poi_import_csv" %}', {
+    method: 'POST',
+    body: formData
+  })
+  .then(r => {
+    if (!r.ok) {
+      throw new Error('Network response was not ok: ' + r.status);
+    }
+    return r.json();
+  })
+  .then(d => {
+    alert(d.success || d.error);
+    if (d.success) {
+      document.getElementById('importCSVForm').reset();
+      bootstrap.Modal.getInstance(document.getElementById('importCSVModal')).hide();
+      location.reload();
+    }
+  })
+  .catch(err => {
+    console.error('Error:', err);
+    alert('Error importing CSV: ' + err.message);
+  });
+}
+</script>
+
+{% endblock %}

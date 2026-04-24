@@ -1,0 +1,93 @@
+{% extends 'core/owner_base.html' %}
+{% block title %}Edit Service - EVHub Owner{% endblock %}
+
+{% block content %}
+    <!-- Main Content -->
+    <div style="flex-grow: 1; margin-left: 250px; padding: 20px; background-color: #f7fafc;">
+        <div class="container">
+            <div class="row mb-4">
+                <div class="col-md-12">
+                    <h1>Edit Service</h1>
+                    <p class="text-muted">Update service details for {{ owner_station.station.name }}</p>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-8">
+                    <div class="card border-0 shadow-sm">
+                        <div class="card-body">
+                            <form method="POST">
+                                {% csrf_token %}
+
+                                <div class="mb-3">
+                                    <label class="form-label" for="id_service_type">Service Type *</label>
+                                    {{ form.service_type }}
+                                    {% if form.service_type.errors %}
+                                        <div class="text-danger small">{{ form.service_type.errors }}</div>
+                                    {% endif %}
+                                </div>
+
+                                <div class="mb-3">
+                                    <label class="form-label" for="id_description">Description *</label>
+                                    {{ form.description }}
+                                    {% if form.description.errors %}
+                                        <div class="text-danger small">{{ form.description.errors }}</div>
+                                    {% endif %}
+                                </div>
+
+                                <div class="mb-3">
+                                    <label class="form-label" for="id_price">Price (Optional)</label>
+                                    {{ form.price }}
+                                    {% if form.price.errors %}
+                                        <div class="text-danger small">{{ form.price.errors }}</div>
+                                    {% endif %}
+                                </div>
+
+                                <div class="mb-3">
+                                    <label class="form-label" for="id_availability_hours">Availability Hours *</label>
+                                    {{ form.availability_hours }}
+                                    {% if form.availability_hours.errors %}
+                                        <div class="text-danger small">{{ form.availability_hours.errors }}</div>
+                                    {% endif %}
+                                </div>
+
+                                <div class="form-check mb-3">
+                                    {{ form.is_active }}
+                                    <label class="form-check-label" for="id_is_active">
+                                        Service is Active
+                                    </label>
+                                    {% if form.is_active.errors %}
+                                        <div class="text-danger small">{{ form.is_active.errors }}</div>
+                                    {% endif %}
+                                </div>
+
+                                <div class="d-grid gap-2">
+                                    <button type="submit" class="btn btn-primary btn-lg">Update Service</button>
+                                    <a href="{% url 'owner_manage_services' owner_station.id %}" class="btn btn-secondary">Cancel</a>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="card border-0 shadow-sm bg-light">
+                        <div class="card-body">
+                            <h5 class="card-title">📋 Service Info</h5>
+                            <p class="small text-muted mb-2">
+                                <strong>Type:</strong> {{ service.get_service_type_display }}
+                            </p>
+                            <p class="small text-muted mb-2">
+                                <strong>Created:</strong> {{ service.created_at|date:"Y-m-d H:i" }}
+                            </p>
+                            <p class="small text-muted">
+                                <strong>Last Updated:</strong> {{ service.updated_at|date:"Y-m-d H:i" }}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

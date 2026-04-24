@@ -1,0 +1,637 @@
+{% extends 'core/admin_base.html' %}
+{% block title %}EV Stations Dashboard{% endblock %}
+{% block content %}
+
+<div class="container-fluid py-4">
+  <!-- Header Section -->
+  <div class="d-flex justify-content-between align-items-center mb-5">
+    <div>
+      <h2 class="fw-bold text-gradient text-primary mb-2">
+        <i class="fas fa-charging-station me-2"></i>EV Charging Stations
+      </h2>
+      <p class="text-muted">
+        Manage your charging network, view analytics, and monitor reservations
+      </p>
+    </div>
+    <div class="d-flex gap-2">
+      <button class="btn btn-outline-primary btn-lg" id="refreshBtn">
+        <i class="fas fa-sync-alt me-2"></i>Refresh
+      </button>
+      <div class="col-md-6 text-end">
+          <a href="{% url 'admin_add_station' %}" class="btn btn-primary">+ Add New Station</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Alert Container -->
+  <div id="alert-container" class="mb-4"></div>
+
+  <!-- Stats Overview Cards -->
+  <div class="row mb-5">
+    <div class="col-xl-3 col-md-6 mb-4">
+      <div class="card border-start-primary border-3 border-0 shadow-sm h-100 py-2">
+        <div class="card-body">
+          <div class="row no-gutters align-items-center">
+            <div class="col mr-2">
+              <div class="text-xs fw-bold text-primary text-uppercase mb-1">
+                Total Stations
+              </div>
+              <div class="h5 mb-0 fw-bold">{{ paginator.count }}</div>
+              <div class="text-muted small mt-1">
+                <i class="fas fa-arrow-up text-success me-1"></i>
+                <span>Active network</span>
+              </div>
+            </div>
+            <div class="col-auto">
+              <i class="fas fa-charging-station fa-2x text-primary opacity-50"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-xl-3 col-md-6 mb-4">
+      <div class="card border-start-success border-3 border-0 shadow-sm h-100 py-2">
+        <div class="card-body">
+          <div class="row no-gutters align-items-center">
+            <div class="col mr-2">
+              <div class="text-xs fw-bold text-success text-uppercase mb-1">
+                Fast Chargers
+              </div>
+              <div class="h5 mb-0 fw-bold">
+                {{ fast_chargers_count|default:"0" }}
+              </div>
+              <div class="text-muted small mt-1">
+                <i class="fas fa-bolt text-warning me-1"></i>
+                <span>Ultra-fast stations</span>
+              </div>
+            </div>
+            <div class="col-auto">
+              <i class="fas fa-bolt-lightning fa-2x text-success opacity-50"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-xl-3 col-md-6 mb-4">
+      <div class="card border-start-info border-3 border-0 shadow-sm h-100 py-2">
+        <div class="card-body">
+          <div class="row no-gutters align-items-center">
+            <div class="col mr-2">
+              <div class="text-xs fw-bold text-info text-uppercase mb-1">
+                Renewable Energy
+              </div>
+              <div class="h5 mb-0 fw-bold">
+                {{ renewable_count|default:"0" }}
+              </div>
+              <div class="text-muted small mt-1">
+                <i class="fas fa-leaf text-success me-1"></i>
+                <span>Green stations</span>
+              </div>
+            </div>
+            <div class="col-auto">
+              <i class="fas fa-solar-panel fa-2x text-info opacity-50"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-xl-3 col-md-6 mb-4">
+      <div class="card border-start-warning border-3 border-0 shadow-sm h-100 py-2">
+        <div class="card-body">
+          <div class="row no-gutters align-items-center">
+            <div class="col mr-2">
+              <div class="text-xs fw-bold text-warning text-uppercase mb-1">
+                Today's Reservations
+              </div>
+              <div class="h5 mb-0 fw-bold">{{ todays_reservations|default:"0" }}</div>
+              <div class="text-muted small mt-1">
+                <i class="fas fa-calendar-check text-primary me-1"></i>
+                <span>Active bookings</span>
+              </div>
+            </div>
+            <div class="col-auto">
+              <i class="fas fa-calendar-alt fa-2x text-warning opacity-50"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Quick Actions -->
+  <div class="card border-0 shadow-sm mb-5">
+    <div class="card-header bg-primary text-white py-3">
+      <h5 class="mb-0">
+        <i class="fas fa-bolt me-2"></i>Quick Actions
+      </h5>
+    </div>
+    <div class="card-body p-4">
+      <div class="row g-3">
+        <div class="col-lg-4">
+          <button class="btn btn-outline-primary w-100 py-3 d-flex align-items-center justify-content-center" 
+                  data-bs-toggle="modal" data-bs-target="#importModal">
+            <i class="fas fa-file-import fa-2x me-3"></i>
+            <div class="text-start">
+              <strong class="d-block">Import Stations</strong>
+              <small class="text-muted">Upload Excel/CSV</small>
+            </div>
+          </button>
+        </div>
+        <div class="col-lg-4">
+          <button class="btn btn-outline-success w-100 py-3 d-flex align-items-center justify-content-center"
+                  id="exportBtn">
+            <i class="fas fa-file-export fa-2x me-3"></i>
+            <div class="text-start">
+              <strong class="d-block">Export Data</strong>
+              <small class="text-muted">Download as CSV</small>
+            </div>
+          </button>
+        </div>
+        <div class="col-lg-4">
+          <button class="btn btn-outline-info w-100 py-3 d-flex align-items-center justify-content-center"
+                  id="findNearbyBtn">
+            <i class="fas fa-map-marker-alt fa-2x me-3"></i>
+            <div class="text-start">
+              <strong class="d-block">Find Nearby</strong>
+              <small class="text-muted">Locate stations</small>
+            </div>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Stations Table -->
+  <div class="card border-0 shadow-lg">
+    <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center">
+      <h5 class="mb-0">
+        <i class="fas fa-list me-2"></i>All Charging Stations
+      </h5>
+      <div class="d-flex gap-2">
+        <div class="input-group" style="width: 250px;">
+          <span class="input-group-text bg-light">
+            <i class="fas fa-search"></i>
+          </span>
+          <input type="text" class="form-control" id="searchStations" placeholder="Search stations...">
+        </div>
+        <select class="form-select" style="width: 150px;" id="filterStatus">
+          <option value="">All Stations</option>
+          <option value="fast">Fast Only</option>
+          <option value="renewable">Renewable</option>
+          <option value="both">Fast & Renewable</option>
+        </select>
+      </div>
+    </div>
+    <div class="card-body p-0">
+      <div class="table-responsive">
+        <table class="table table-hover align-middle mb-0">
+          <thead class="table-light">
+            <tr>
+              <th class="ps-4" style="width: 60px;">ID</th>
+              <th>Station Details</th>
+              <th>Location</th>
+              <th class="text-center">Features</th>
+              <th class="text-center">Status</th>
+              <th class="text-center">Reservations</th>
+              <th class="text-center pe-4">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for s in stations %}
+            <tr class="station-row" 
+                data-name="{{ s.name|lower }}"
+                data-location="{{ s.location|lower }}"
+                data-fast="{{ s.ultra_fast|yesno:'true,false' }}"
+                data-renewable="{{ s.powered_by_renewables|yesno:'true,false' }}">
+              <td class="ps-4">
+                <span class="badge bg-primary rounded-pill px-3 py-2">#{{ s.id }}</span>
+              </td>
+              <td>
+                <div class="d-flex align-items-center">
+                  <div class="icon-shape icon-lg bg-primary bg-opacity-10 text-primary rounded-circle me-3">
+                    <i class="fas fa-charging-station"></i>
+                  </div>
+                  <div>
+                    <h6 class="mb-1">{{ s.name }}</h6>
+                    <small class="text-muted">Added {{ s.created_at|date:"M d, Y" }}</small>
+                  </div>
+                </div>
+              </td>
+              <td>
+                <div class="d-flex align-items-center">
+                  <i class="fas fa-map-marker-alt text-danger me-2"></i>
+                  <span>{{ s.location|truncatechars:40 }}</span>
+                </div>
+              </td>
+              <td class="text-center">
+                <div class="d-flex justify-content-center gap-2">
+                  {% if s.ultra_fast %}
+                  <span class="badge bg-warning text-dark" data-bs-toggle="tooltip" title="Ultra Fast Charging">
+                    <i class="fas fa-bolt me-1"></i>Fast
+                  </span>
+                  {% endif %}
+                  {% if s.powered_by_renewables %}
+                  <span class="badge bg-success" data-bs-toggle="tooltip" title="Powered by Renewables">
+                    <i class="fas fa-leaf me-1"></i>Green
+                  </span>
+                  {% endif %}
+                </div>
+              </td>
+              <td class="text-center">
+                <span class="badge bg-success rounded-pill px-3 py-2">
+                  <i class="fas fa-circle me-1" style="font-size: 8px;"></i>
+                  Active
+                </span>
+              </td>
+              <td class="text-center">
+                <div class="d-flex flex-column align-items-center">
+                  <span class="fw-bold">{{ s.reservation_count|default:"0" }}</span>
+                  <small class="text-muted">today</small>
+                </div>
+              </td>
+              <td class="text-center pe-4">
+                <div class="btn-group" role="group">
+                  <a href="{% url 'admin_station_update' s.id %}" 
+                     class="btn btn-sm btn-outline-primary rounded-start" 
+                     data-bs-toggle="tooltip" title="Edit Station">
+                    <i class="fas fa-edit"></i>
+                  </a>
+                  <a href="#" class="btn btn-sm btn-outline-info" 
+                     data-bs-toggle="tooltip" title="View Reservations">
+                    <i class="fas fa-calendar-check"></i>
+                  </a>
+                  <a href="#" class="btn btn-sm btn-outline-success" 
+                     data-bs-toggle="tooltip" title="Analytics">
+                    <i class="fas fa-chart-line"></i>
+                  </a>
+                  <button type="button" 
+                          class="btn btn-sm btn-outline-danger rounded-end delete-btn" 
+                          data-id="{{ s.id }}" 
+                          data-name="{{ s.name }}"
+                          data-bs-toggle="tooltip" title="Delete Station">
+                    <i class="fas fa-trash"></i>
+                  </button>
+                </div>
+              </td>
+            </tr>
+            {% empty %}
+            <tr>
+              <td colspan="7" class="text-center py-5">
+                <div class="empty-state">
+                  <i class="fas fa-charging-station fa-4x text-muted mb-3"></i>
+                  <h5 class="text-muted">No Stations Found</h5>
+                  <p class="text-muted">Add your first charging station to get started</p>
+                  <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addStationModal">
+                    <i class="fas fa-plus-circle me-2"></i>Add First Station
+                  </button>
+                </div>
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- Pagination -->
+  {% if paginator.num_pages > 1 %}
+  <div class="d-flex justify-content-between align-items-center mt-4">
+    <div class="text-muted">
+      Showing <strong>{{ pagination_start }} - {{ pagination_end }}</strong> of 
+      <strong>{{ paginator.count }}</strong> stations
+    </div>
+    <nav aria-label="Page navigation">
+      <ul class="pagination mb-0">
+        {% if stations.has_previous %}
+        <li class="page-item">
+          <a class="page-link" href="?page=1">
+            <i class="fas fa-angle-double-left"></i>
+          </a>
+        </li>
+        <li class="page-item">
+          <a class="page-link" href="?page={{ stations.previous_page_number }}">
+            <i class="fas fa-angle-left"></i>
+          </a>
+        </li>
+        {% else %}
+        <li class="page-item disabled">
+          <span class="page-link"><i class="fas fa-angle-double-left"></i></span>
+        </li>
+        <li class="page-item disabled">
+          <span class="page-link"><i class="fas fa-angle-left"></i></span>
+        </li>
+        {% endif %}
+
+        {% for num in paginator.page_range %}
+          {% if stations.number == num %}
+          <li class="page-item active">
+            <span class="page-link">{{ num }}</span>
+          </li>
+          {% elif num > stations.number|add:"-3" and num < stations.number|add:"3" %}
+          <li class="page-item">
+            <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+          </li>
+          {% endif %}
+        {% endfor %}
+
+        {% if stations.has_next %}
+        <li class="page-item">
+          <a class="page-link" href="?page={{ stations.next_page_number }}">
+            <i class="fas fa-angle-right"></i>
+          </a>
+        </li>
+        <li class="page-item">
+          <a class="page-link" href="?page={{ paginator.num_pages }}">
+            <i class="fas fa-angle-double-right"></i>
+          </a>
+        </li>
+        {% else %}
+        <li class="page-item disabled">
+          <span class="page-link"><i class="fas fa-angle-right"></i></span>
+        </li>
+        <li class="page-item disabled">
+          <span class="page-link"><i class="fas fa-angle-double-right"></i></span>
+        </li>
+        {% endif %}
+      </ul>
+    </nav>
+  </div>
+  {% endif %}
+</div>
+<script> 
+// Enhanced Notification System
+function notify(msg, type = "success", duration = 4000) {
+  const alertContainer = document.getElementById("alert-container");
+  const icons = {
+    success: "fas fa-check-circle",
+    error: "fas fa-times-circle",
+    warning: "fas fa-exclamation-triangle",
+    info: "fas fa-info-circle"
+  };
+  
+  const alert = document.createElement('div');
+  alert.className = `alert alert-${type} alert-dismissible fade show`;
+  alert.innerHTML = `
+    <div class="d-flex align-items-center">
+      <i class="${icons[type]} fs-4 me-3"></i>
+      <div class="flex-grow-1">
+        <strong class="d-block">${type.charAt(0).toUpperCase() + type.slice(1)}!</strong>
+        ${msg}
+      </div>
+      <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+  `;
+  alertContainer.prepend(alert);
+  
+  // Auto-remove after duration
+  setTimeout(() => {
+    if (alert.parentNode) {
+      alert.remove();
+    }
+  }, duration);
+}
+
+  // Validation
+  if (!name || !location) {
+    notify("Station name and location are required", "error");
+    return;
+  }
+  
+  const submitBtn = this.querySelector('button[type="submit"]');
+  const originalText = submitBtn.innerHTML;
+  submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Adding...';
+  submitBtn.disabled = true;
+  
+  const formData = new URLSearchParams({
+    name: name,
+    location: location,
+    ultra_fast: ultraFast ? 'on' : 'off',
+    powered_by_renewables: renewable ? 'on' : 'off',
+    csrfmiddlewaretoken: csrftoken
+  });
+  
+  fetch(window.location.href, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded',
+    },
+    body: formData.toString()
+  })
+    .then(response => {
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      return response.json();
+    })
+    .then(d => {
+      if (d.success) {
+        notify(d.success, "success");
+        document.getElementById('station-form').reset();
+        const modalElement = document.getElementById('#addStationModal');
+        const modal = bootstrap.Modal.getInstance(modalElement) || new bootstrap.Modal(modalElement);
+        modal.hide();
+        setTimeout(() => {
+          window.location.reload();
+        }, 1500);
+      } else {
+        notify(d.error || "Failed to add station", "error");
+        submitBtn.innerHTML = originalText;
+        submitBtn.disabled = false;
+      }
+    })
+    .catch(err => {
+      notify("Error: " + err.message, "error");
+      console.error(err);
+      submitBtn.innerHTML = originalText;
+      submitBtn.disabled = false;
+    });
+});
+
+// Import Form
+document.getElementById('import-form')?.addEventListener('submit', function(e) {
+  e.preventDefault();
+  
+  const fileInput = document.getElementById('excel-file');
+  const file = fileInput.files[0];
+  const skipDuplicates = document.getElementById('skipDuplicates').checked;
+  
+  if (!file) {
+    notify("Please select a file to upload", "error");
+    return;
+  }
+  
+  const formData = new FormData();
+  formData.append('file', file);
+  formData.append('skip_duplicates', skipDuplicates);
+  formData.append('csrfmiddlewaretoken', csrftoken);
+  
+  const submitBtn = e.target.querySelector('button[type="submit"]');
+  const originalText = submitBtn.innerHTML;
+  submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Importing...';
+  submitBtn.disabled = true;
+  
+  fetch('/admin-station/import/', {
+    method: 'POST',
+    body: formData
+  })
+    .then(r => r.json())
+    .then(d => {
+      if (d.success) {
+        notify(`${d.count} stations imported successfully!`, "success");
+        $('#importModal').modal('hide');
+        setTimeout(() => {
+          window.location.reload();
+        }, 2000);
+      } else {
+        notify(d.error || "Import failed", "error");
+      }
+    })
+    .catch(err => {
+      notify("Import failed. Please check the file format.", "error");
+    })
+    .finally(() => {
+      submitBtn.innerHTML = originalText;
+      submitBtn.disabled = false;
+    });
+});
+
+// Delete Station
+document.addEventListener('click', function(e) {
+  if (e.target.closest('.delete-btn')) {
+    const btn = e.target.closest('.delete-btn');
+    const stationId = btn.dataset.id;
+    const stationName = btn.dataset.name;
+    
+    if (confirm(`Delete station "${stationName}"?\n\nThis will also delete all reservations and charging history for this station.`)) {
+      btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+      btn.disabled = true;
+      
+      fetch(`/admin-station/${stationId}/delete/`, {
+        method: 'POST',
+        headers: { 'X-CSRFToken': csrftoken }
+      })
+        .then(r => r.json())
+        .then(d => {
+          if (d.success) {
+            notify(`Station "${stationName}" deleted successfully`, "success");
+            btn.closest('tr').remove();
+            
+            // Update stats
+            const totalStations = document.querySelector('.card:first-child .h5');
+            if (totalStations) {
+              totalStations.textContent = parseInt(totalStations.textContent) - 1;
+            }
+          } else {
+            notify(d.error || "Delete failed", "error");
+            btn.innerHTML = '<i class="fas fa-trash"></i>';
+            btn.disabled = false;
+          }
+        })
+        .catch(err => {
+          notify("Network error", "error");
+          btn.innerHTML = '<i class="fas fa-trash"></i>';
+          btn.disabled = false;
+        });
+    }
+  }
+});
+
+// Search and Filter
+document.getElementById('searchStations')?.addEventListener('input', function(e) {
+  const searchTerm = e.target.value.toLowerCase();
+  const filterStatus = document.getElementById('filterStatus').value;
+  
+  document.querySelectorAll('.station-row').forEach(row => {
+    const name = row.dataset.name;
+    const location = row.dataset.location;
+    const isFast = row.dataset.fast === 'true';
+    const isRenewable = row.dataset.renewable === 'true';
+    
+    let matchesSearch = name.includes(searchTerm) || location.includes(searchTerm);
+    let matchesFilter = true;
+    
+    if (filterStatus === 'fast') {
+      matchesFilter = isFast;
+    } else if (filterStatus === 'renewable') {
+      matchesFilter = isRenewable;
+    } else if (filterStatus === 'both') {
+      matchesFilter = isFast && isRenewable;
+    }
+    
+    row.style.display = (matchesSearch && matchesFilter) ? '' : 'none';
+  });
+});
+
+document.getElementById('filterStatus')?.addEventListener('change', function() {
+  document.getElementById('searchStations').dispatchEvent(new Event('input'));
+});
+
+// Find Nearby Stations
+document.getElementById('findNearbyBtn')?.addEventListener('click', function() {
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(
+      position => {
+        const { latitude, longitude } = position.coords;
+        notify(`Location found: ${latitude.toFixed(4)}, ${longitude.toFixed(4)}`, "info");
+        // In a real app, you would make an API call to find nearby stations
+      },
+      error => {
+        notify("Unable to get your location. Please enable location services.", "error");
+      }
+    );
+  } else {
+    notify("Geolocation is not supported by your browser", "error");
+  }
+});
+
+// Export Data
+document.getElementById('exportBtn')?.addEventListener('click', function() {
+  notify("Exporting station data as CSV...", "info");
+  // In a real app, this would trigger a CSV download
+  setTimeout(() => {
+    notify("Export completed! Your download will start shortly.", "success");
+  }, 1000);
+});
+
+// Refresh Button
+document.getElementById('refreshBtn')?.addEventListener('click', function() {
+  const btn = this;
+  const originalText = btn.innerHTML;
+  btn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Refreshing...';
+  btn.disabled = true;
+  
+  setTimeout(() => {
+    window.location.reload();
+  }, 1000);
+});
+
+// Locate Me Button
+document.getElementById('locateMeBtn')?.addEventListener('click', function() {
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(
+      position => {
+        const { latitude, longitude } = position.coords;
+        // Use reverse geocoding API in real app
+        document.getElementById('location').value = `Near ${latitude.toFixed(4)}, ${longitude.toFixed(4)}`;
+      },
+      error => {
+        notify("Unable to get your location", "error");
+      }
+    );
+  }
+});
+
+// Initialize tooltips
+document.addEventListener('DOMContentLoaded', function() {
+  const tooltips = document.querySelectorAll('[data-bs-toggle="tooltip"]');
+  tooltips.forEach(tooltip => {
+    new bootstrap.Tooltip(tooltip);
+  });
+});
+</script>
+
+{% endblock %}

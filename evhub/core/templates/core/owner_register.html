@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Owner Registration · EvHub (Dark EV Theme)</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Font Awesome for consistent icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <!-- Google Fonts: Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #03080a;
+            background-image: 
+                radial-gradient(circle at 20% 30%, rgba(0, 255, 150, 0.12) 0%, transparent 35%),
+                radial-gradient(circle at 85% 70%, rgba(0, 200, 255, 0.08) 0%, transparent 45%),
+                linear-gradient(145deg, #051215 0%, #0a1a1f 100%);
+            position: relative;
+            padding: 1.5rem;
+            color: #edf7f0;
+        }
+
+        /* ----- dark EV background with particles ----- */
+        .ev-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            overflow: hidden;
+            pointer-events: none;
+        }
+
+        .particle {
+            position: absolute;
+            width: 3px;
+            height: 3px;
+            background: #a0ffb0;
+            border-radius: 50%;
+            box-shadow: 0 0 20px #2eff7c, 0 0 40px #16ff60;
+            opacity: 0.7;
+            animation: floatDark 20s linear infinite;
+        }
+
+        @keyframes floatDark {
+            0% { transform: translateY(110vh) translateX(0) scale(1); opacity: 0; }
+            15% { opacity: 0.9; }
+            85% { opacity: 0.8; }
+            100% { transform: translateY(-20vh) translateX(60px) scale(0.3); opacity: 0; }
+        }
+
+        .bg-grid {
+            position: absolute;
+            inset: 0;
+            background-image: 
+                repeating-linear-gradient(0deg, transparent, transparent 70px, rgba(0, 255, 150, 0.03) 70px, rgba(0, 255, 200, 0.03) 71px),
+                repeating-linear-gradient(90deg, transparent, transparent 70px, rgba(0, 255, 150, 0.02) 70px, rgba(0, 200, 255, 0.02) 71px);
+            z-index: 0;
+        }
+
+        .ev-silhouette {
+            position: absolute;
+            bottom: 15px;
+            right: 25px;
+            opacity: 0.15;
+            font-size: 8rem;
+            color: #0f0;
+            filter: drop-shadow(0 0 25px #00ff88);
+            transform: rotateY(12deg);
+            z-index: 0;
+        }
+
+        /* main registration card */
+        .registration-container {
+            position: relative;
+            z-index: 30;
+            background: rgba(0, 10, 8, 0.4);
+            backdrop-filter: blur(16px) saturate(200%);
+            -webkit-backdrop-filter: blur(16px) saturate(200%);
+            border: 1.5px solid rgba(100, 255, 150, 0.35);
+            border-radius: 48px;
+            padding: 3rem 2.8rem;
+            max-width: 1000px;
+            width: 100%;
+            box-shadow: 0 35px 70px rgba(0, 0, 0, 0.8), 0 0 0 1px rgba(0, 255, 150, 0.2) inset, 0 0 50px #14ff6c1a;
+            color: white;
+            animation: fadeIn 0.6s;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* logo */
+        .evhub-logo {
+            width: 70px;
+            height: 70px;
+            background: #132b30;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 22px auto;
+            box-shadow: 0 0 25px #1eff6e, 0 4px 20px rgba(0,0,0,0.7);
+            border: 2px solid #50ffa0;
+        }
+
+        .form-title {
+            text-align: center;
+            margin-bottom: 28px;
+        }
+
+        .form-title h2 {
+            font-weight: 700;
+            background: linear-gradient(145deg, #b5ffcb, #5eff8c);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-shadow: 0 0 30px #1eff6e;
+            font-size: 2.4rem;
+            letter-spacing: -0.5px;
+            margin-bottom: 8px;
+        }
+
+        .form-title p {
+            color: #b0d8c0;
+            font-size: 1rem;
+            opacity: 0.9;
+        }
+
+        .section-title {
+            font-weight: 700;
+            color: #d0ffdf;
+            margin: 28px 0 18px 0;
+            font-size: 1.2rem;
+            border-left: 4px solid #40ff90;
+            padding-left: 16px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            text-shadow: 0 0 8px #1aff70;
+        }
+
+        /* Form grid - FIXED */
+        .row {
+            display: flex;
+            flex-wrap: wrap;
+            margin: 0 -8px;
+        }
+
+        .col-md-6 {
+            flex: 0 0 calc(50% - 16px);
+            margin: 0 8px 16px 8px;
+            min-width: 250px;
+        }
+
+        .col-12 {
+            flex: 0 0 calc(100% - 16px);
+            margin: 0 8px 16px 8px;
+        }
+
+        /* INPUT FIELDS - FIXED CSS */
+        input, select, textarea {
+            width: 100%;
+            padding: 14px 20px;
+            background: rgba(10, 30, 25, 0.7);
+            border: 1.5px solid rgba(70, 255, 140, 0.4);
+            border-radius: 40px;
+            font-size: 0.95rem;
+            color: white;
+            outline: none;
+            transition: all 0.2s ease;
+            backdrop-filter: blur(5px);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+            font-family: 'Inter', sans-serif;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            border-color: #50ffa0;
+            background: rgba(20, 50, 40, 0.9);
+            box-shadow: 0 0 20px #33ff99, 0 4px 15px black;
+        }
+
+        input::placeholder, select::placeholder, textarea::placeholder {
+            color: rgba(180, 255, 200, 0.5);
+            font-weight: 400;
+            font-size: 0.9rem;
+        }
+
+        /* Style for select dropdown */
+        select {
+            appearance: none;
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2350ffa0' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right 15px center;
+            background-size: 18px;
+            padding-right: 45px;
+        }
+
+        select option {
+            background: #0a1f1a;
+            color: white;
+        }
+
+        /* Textarea specific */
+        textarea {
+            min-height: 80px;
+            resize: vertical;
+            border-radius: 30px;
+        }
+
+        /* Error messages */
+        .error-message {
+            color: #ffb0b0;
+            background: rgba(200, 30, 30, 0.2);
+            border-radius: 40px;
+            padding: 0.4rem 1.2rem;
+            display: inline-block;
+            margin-top: 8px;
+            font-size: 0.8rem;
+            border: 1px solid #ff8888;
+            backdrop-filter: blur(4px);
+        }
+
+        /* Button */
+        .btn-register {
+            width: 100%;
+            background: linear-gradient(125deg, #0b3b1c, #1f9c4a, #2bbd5e);
+            border: none;
+            border-radius: 60px;
+            padding: 1rem 1.8rem;
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #0b1f14;
+            letter-spacing: 1px;
+            cursor: pointer;
+            transition: 0.2s;
+            box-shadow: 0 15px 30px -3px #0a661e, 0 0 20px #55ff99;
+            border: 1px solid #b0ffc0;
+            margin-top: 28px;
+            text-shadow: 0 1px 2px rgba(255, 255, 255, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+        }
+
+        .btn-register:hover {
+            background: linear-gradient(125deg, #1f9c4a, #2bbd5e, #6ae685);
+            transform: scale(1.02);
+            box-shadow: 0 20px 40px #0f8028, 0 0 40px #6effb0;
+        }
+
+        .login-link {
+            text-align: center;
+            margin-top: 24px;
+            font-size: 1rem;
+            color: #cddfd5;
+        }
+
+        .login-link a {
+            color: #b2ffc0;
+            text-decoration: none;
+            font-weight: 700;
+            border-bottom: 1px solid transparent;
+            transition: 0.2s;
+            text-shadow: 0 0 6px #1aff70;
+        }
+
+        .login-link a:hover {
+            border-bottom-color: #b2ffc0;
+            color: #eafff0;
+        }
+
+        .divider {
+            border-top: 1px solid rgba(100, 255, 150, 0.3);
+            margin: 32px 0 24px 0;
+        }
+
+        .ev-footnote {
+            display: flex;
+            justify-content: center;
+            gap: 1.2rem;
+            margin-top: 28px;
+            opacity: 0.4;
+            font-size: 1.3rem;
+        }
+
+        /* Mobile responsive */
+        @media (max-width: 768px) {
+            .registration-container {
+                padding: 2rem 1.5rem;
+            }
+            
+            .col-md-6 {
+                flex: 0 0 calc(100% - 16px);
+            }
+            
+            .form-title h2 {
+                font-size: 1.8rem;
+            }
+            
+            .btn-register {
+                font-size: 1.1rem;
+                padding: 0.9rem 1.5rem;
+            }
+        }
+
+        /* Fix for Django form fields */
+        input[name="username"], 
+        input[name="email"], 
+        input[name="first_name"], 
+        input[name="last_name"], 
+        input[name="phone"],
+        input[name="password1"],
+        input[name="password2"],
+        input[name="company_name"],
+        input[name="company_email"],
+        input[name="company_phone"],
+        input[name="registration_number"],
+        input[name="tax_id"],
+        input[name="company_address"],
+        textarea[name="company_address"] {
+            width: 100%;
+            padding: 14px 20px;
+            background: rgba(10, 30, 25, 0.7);
+            border: 1.5px solid rgba(70, 255, 140, 0.4);
+            border-radius: 40px;
+            color: white;
+            font-size: 0.95rem;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- dark EV background -->
+    <div class="ev-bg">
+        <div class="bg-grid"></div>
+        <div class="ev-silhouette">⚡🚘</div>
+        <script>
+            (function() {
+                for (let i = 0; i < 36; i++) {
+                    const p = document.createElement('div');
+                    p.className = 'particle';
+                    const s = Math.random() * 5 + 2;
+                    p.style.width = s + 'px';
+                    p.style.height = s + 'px';
+                    p.style.left = Math.random() * 100 + '%';
+                    p.style.animationDuration = (Math.random() * 15 + 12) + 's';
+                    p.style.animationDelay = (Math.random() * -15) + 's';
+                    p.style.background = `rgba(100, 255, 150, ${Math.random() * 0.9})`;
+                    p.style.boxShadow = `0 0 ${Math.random() * 30 + 15}px #44ff88`;
+                    document.querySelector('.ev-bg').appendChild(p);
+                }
+            })();
+        </script>
+        <div style="position:absolute; top:10%; left:15%; width:200px; height:200px; background:radial-gradient(circle, #1aff6e0d 0%, transparent 70%); border-radius:50%; filter:blur(40px);"></div>
+        <div style="position:absolute; bottom:5%; left:80%; width:300px; height:300px; background:radial-gradient(circle, #2effb010 0%, transparent 70%); border-radius:50%; filter:blur(60px);"></div>
+    </div>
+
+    <!-- main registration card -->
+    <div class="registration-container">
+        <div class="evhub-logo">
+            <svg width="44" height="44" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="18" cy="18" r="18" fill="#2bbd5e"/>
+                <path d="M18 7L22.5 18H19.5L21 29L13.5 16.5H16.5L14.5 7H18Z" fill="#fff"/>
+            </svg>
+        </div>
+        <div class="form-title">
+            <h2>⚡ Owner Registration</h2>
+            <p>Register your charging station business & manage your EV hub</p>
+        </div>
+
+        <form method="POST">
+            {% csrf_token %}
+            
+            <!-- Account Information Section -->
+            <div class="section-title">
+                <i class="fas fa-user-circle" style="margin-right: 12px;"></i> Account Information
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    {{ user_form.username }}
+                    {% if user_form.username.errors %}
+                        <div class="error-message"><i class="fas fa-exclamation-circle"></i> {{ user_form.username.errors.0 }}</div>
+                    {% endif %}
+                </div>
+                <div class="col-md-6">
+                    {{ user_form.email }}
+                    {% if user_form.email.errors %}
+                        <div class="error-message"><i class="fas fa-exclamation-circle"></i> {{ user_form.email.errors.0 }}</div>
+                    {% endif %}
+                </div>
+                <div class="col-md-6">
+                    {{ user_form.first_name }}
+                </div>
+                <div class="col-md-6">
+                    {{ user_form.last_name }}
+                </div>
+                <div class="col-md-6">
+                    {{ user_form.phone }}
+                </div>
+                <div class="col-md-6">
+                    {{ user_form.password1 }}
+                </div>
+                <div class="col-md-6">
+                    {{ user_form.password2 }}
+                </div>
+            </div>
+
+            <div class="divider"></div>
+
+            <!-- Company Information Section -->
+            <div class="section-title">
+                <i class="fas fa-building" style="margin-right: 12px;"></i> Company Information
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    {{ owner_form.company_name }}
+                </div>
+                <div class="col-md-6">
+                    {{ owner_form.company_email }}
+                </div>
+                <div class="col-md-6">
+                    {{ owner_form.company_phone }}
+                </div>
+                <div class="col-md-6">
+                    {{ owner_form.registration_number }}
+                </div>
+                <div class="col-12">
+                    {{ owner_form.company_address }}
+                </div>
+                <div class="col-md-6">
+                    {{ owner_form.tax_id }}
+                </div>
+            </div>
+
+            <button type="submit" class="btn-register">
+                <i class="fas fa-charging-station"></i> Create Owner Account
+            </button>
+
+            <div class="login-link">
+                <i class="fas fa-arrow-right-to-bracket" style="margin-right: 6px;"></i> 
+                Already registered? <a href="{% url 'login' %}">Login here</a>
+            </div>
+        </form>
+
+        <div class="ev-footnote">
+            <span>🔋</span> <span>⚡</span> <span>🌑</span> <span>🚗</span> <span>🔌</span>
+        </div>
+    </div>
+
+    <!-- Script to add placeholders -->
+    <script>
+        (function() {
+            const fieldPlaceholders = {
+                'username': 'Choose a username',
+                'email': 'your@email.com',
+                'first_name': 'First name',
+                'last_name': 'Last name',
+                'phone': 'Phone number',
+                'password1': 'Create password',
+                'password2': 'Confirm password',
+                'company_name': 'Company name',
+                'company_email': 'company@email.com',
+                'company_phone': 'Company phone',
+                'registration_number': 'Registration number',
+                'company_address': 'Full business address',
+                'tax_id': 'Tax ID / VAT number'
+            };
+            
+            const inputs = document.querySelectorAll('input, textarea');
+            inputs.forEach(input => {
+                const name = input.name || input.id;
+                if (name && fieldPlaceholders[name]) {
+                    input.placeholder = fieldPlaceholders[name];
+                }
+                
+                // Add specific styling for textarea
+                if (input.tagName.toLowerCase() === 'textarea') {
+                    input.style.minHeight = '80px';
+                    input.style.padding = '14px 20px';
+                }
+            });
+        })();
+    </script>
+</body>
+</html>

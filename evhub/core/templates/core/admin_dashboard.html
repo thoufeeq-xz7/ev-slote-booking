@@ -1,0 +1,57 @@
+  {% extends 'core/admin_base.html' %}
+
+  {% block title %}Admin Dashboard{% endblock %}
+  {% block page_title %}Dashboard Overview{% endblock %}
+
+  {% block content %}
+
+  <div class="row g-4">
+
+    <!-- Total Users -->
+    <div class="col-md-4">
+      <div class="glass-card text-center">
+        <div class="mb-2 fs-1 text-info">
+          <i class="bi bi-people-fill"></i>
+        </div>
+        <h6 class="text-secondary">Total Users</h6>
+        <h2 class="fw-bold">{{ total_users }}</h2>
+      </div>
+    </div>
+
+    <!-- Total Stations -->
+    <div class="col-md-4">
+      <div class="glass-card text-center">
+        <div class="mb-2 fs-1 text-warning">
+          <i class="bi bi-lightning-charge-fill"></i>
+        </div>
+        <h6 class="text-secondary">Charging Stations</h6>
+        <h2 class="fw-bold">{{ total_stations }}</h2>
+      </div>
+    </div>
+
+    <!-- Total Bookings -->
+    <div class="col-md-4">
+      <div class="glass-card text-center">
+        <div class="mb-2 fs-1 text-success">
+          <i class="bi bi-calendar-check-fill"></i>
+        </div>
+        <h6 class="text-secondary">Total Bookings</h6>
+        <h2 class="fw-bold">{{ total_bookings }}</h2>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Secondary Section -->
+  <div class="row mt-4">
+    <div class="col-md-12">
+      <div class="glass-card">
+        <h5 class="mb-3">System Status</h5>
+        <p class="text-secondary mb-0">
+          All services are running normally. Monitor stations, slots, and bookings in real time.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  {% endblock %}

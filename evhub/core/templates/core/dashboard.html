@@ -1,0 +1,107 @@
+{% extends 'core/base.html' %}
+{% block title %}Dashboard{% endblock %}
+{% block content %}
+
+<!-- Welcome -->
+<h2 class="mb-3">
+  Welcome, {{ user.first_name|default:user.username }} 👋
+</h2>
+
+<!-- Upcoming Bookings -->
+<h4>Upcoming Bookings</h4>
+
+<ul class="list-group mb-4">
+  {% for reservation in upcoming %}
+  <li class="list-group-item">
+    <strong>{{ reservation.station.name }}</strong><br>
+    <small class="text-muted">
+      {{ reservation.start_time|date:"M d, H:i" }}
+      –
+      {{ reservation.end_time|date:"H:i" }}
+    </small>
+
+    {% with recs=reservation.recommendations %}
+      {% if recs %}
+        <ul class="mt-2">
+          {% for poi in recs %}
+            <li>
+              {% if poi.category == 'Diagnostic' %}
+                <span class="text-danger">
+                  🛑 {{ poi.poi_name }}
+                </span>
+              {% else %}
+                ✅ {{ poi.poi_name }}
+                <small class="text-muted">
+                  ({{ poi.category|capfirst }},
+                  {{ poi.distance_km|floatformat:1 }} km)
+                </small>
+              {% endif %}
+            </li>
+          {% endfor %}
+        </ul>
+      {% else %}
+        <p class="text-muted mt-2 mb-0">No recommendations available.</p>
+      {% endif %}
+    {% endwith %}
+  </li>
+  {% empty %}
+  <li class="list-group-item">You have no upcoming bookings.</li>
+  {% endfor %}
+</ul>
+
+<hr>
+
+<!-- Charging Activity Chart -->
+<h4 class="mb-3">Charging Activity Overview</h4>
+
+<div class="card p-3 shadow-sm">
+  <canvas id="bookingChart" height="120"></canvas>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+  const ctx = document.getElementById('bookingChart');
+  new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: {{ chart_labels|safe }},
+      datasets: [{
+        label: 'Bookings',
+        data: {{ chart_data|safe }},
+        fill: true,
+        tension: 0.3,
+        borderWidth: 2,
+        borderColor: '#0d6efd',
+        backgroundColor: 'rgba(13,110,253,0.12)',
+        pointRadius: 4,
+        pointBackgroundColor: '#0d6efd'
+      }]
+    },
+    options: {
+      maintainAspectRatio: false,
+      plugins: {
+        legend: { display: true, labels: { font: { size: 13 } } },
+        tooltip: { enabled: true, mode: 'index', intersect: false }
+      },
+      scales: {
+        x: {
+          title: { display: true, text: 'Month' },
+          ticks: { font: { size: 13 } },
+          grid: { display: false }
+        },
+        y: {
+          beginAtZero: true,
+          ticks: {
+            stepSize: 1,
+            precision: 0,
+            font: { size: 13 }
+          },
+          title: { display: true, text: 'Bookings' },
+          grid: { color: 'rgba(0,0,0,0.05)' }
+        }
+      }
+    }
+  });
+</script>
+
+{% endblock %}

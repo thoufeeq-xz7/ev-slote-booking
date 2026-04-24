@@ -1,0 +1,177 @@
+{% extends 'core/owner_base.html' %}
+{% block title %}Owner Dashboard - EVHub{% endblock %}
+
+{% block content %}
+
+<style>
+.dashboard-wrapper {
+    padding: 30px;
+}
+
+/* Stats Cards */
+.stat-card {
+    border-radius: 15px;
+    padding: 20px;
+    color: white;
+    transition: 0.3s;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+}
+
+.stat-card:hover {
+    transform: translateY(-6px);
+}
+
+.gradient-primary { background: linear-gradient(135deg, #0d6efd, #5b9cff); }
+.gradient-success { background: linear-gradient(135deg, #198754, #43d39e); }
+.gradient-info { background: linear-gradient(135deg, #0dcaf0, #5fd9ff); }
+.gradient-warning { background: linear-gradient(135deg, #ffc107, #ffda6a); }
+
+/* Table */
+.modern-table thead {
+    background: #f8f9fa;
+}
+
+.modern-table tbody tr {
+    transition: 0.2s;
+}
+
+.modern-table tbody tr:hover {
+    background-color: #f1f5ff;
+}
+
+.action-btn {
+    border-radius: 8px;
+    padding: 5px 12px;
+}
+</style>
+
+<div class="dashboard-wrapper container-fluid">
+
+    <!-- Statistics Section -->
+    <div class="row g-4 mb-4">
+
+        <div class="col-md-3">
+            <div class="stat-card gradient-primary text-center">
+                <h6>Total Stations</h6>
+                <h2>{{ total_stations }}</h2>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="stat-card gradient-success text-center">
+                <h6>Total Services</h6>
+                <h2>{{ total_services }}</h2>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="stat-card gradient-info text-center">
+                <h6>Total Bookings</h6>
+                <h2>{{ total_bookings }}</h2>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="stat-card gradient-warning text-center">
+                <h6>Revenue</h6>
+                <h2>₹0</h2>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Stations List -->
+    <div class="card border-0 shadow-lg rounded-4">
+        <div class="card-header bg-white d-flex justify-content-between align-items-center py-3">
+            <h5 class="mb-0 fw-semibold">Your Charging Stations</h5>
+            <a href="{% url 'owner_add_station' %}" class="btn btn-primary btn-sm rounded-pill">
+                + Add Station
+            </a>
+        </div>
+
+        <div class="card-body">
+
+            {% if owner_stations %}
+
+                <div class="table-responsive">
+                    <table class="table modern-table align-middle">
+                        <thead>
+                            <tr>
+                                <th>Station</th>
+                                <th>Location</th>
+                                <th>Ports</th>
+                                <th>Services</th>
+                                <th class="text-center">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for owner_station in owner_stations %}
+                            <tr>
+                                <td>
+                                    <strong>{{ owner_station.station.name }}</strong>
+                                </td>
+
+                                <td>
+                                    {{ owner_station.station.location }}
+                                </td>
+
+                                <td>
+                                    <span class="badge bg-info">
+                                        {{ owner_station.station.total_ports }} Ports
+                                    </span>
+
+                                    {% if owner_station.station.ultra_fast %}
+                                        <span class="badge bg-warning text-dark">
+                                            Ultra Fast
+                                        </span>
+                                    {% endif %}
+                                </td>
+
+                                <td>
+                                    <span class="badge bg-success">
+                                        {{ owner_station.services.count }} Services
+                                    </span>
+                                </td>
+
+                                <td class="text-center">
+
+                                    <a href="{% url 'owner_manage_services' owner_station.id %}" 
+                                       class="btn btn-sm btn-outline-info action-btn">
+                                       Services
+                                    </a>
+
+                                    <a href="{% url 'owner_edit_station' owner_station.id %}" 
+                                       class="btn btn-sm btn-outline-warning action-btn">
+                                       Edit
+                                    </a>
+
+                                    <a href="{% url 'owner_delete_station' owner_station.id %}" 
+                                       class="btn btn-sm btn-outline-danger action-btn">
+                                       Delete
+                                    </a>
+
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+
+            {% else %}
+
+                <div class="text-center py-5">
+                    <h6 class="text-muted mb-3">No stations added yet</h6>
+                    <a href="{% url 'owner_add_station' %}" 
+                       class="btn btn-primary rounded-pill px-4">
+                        Add Your First Station
+                    </a>
+                </div>
+
+            {% endif %}
+
+        </div>
+    </div>
+
+</div>
+
+{% endblock %}

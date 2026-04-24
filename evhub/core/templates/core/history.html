@@ -1,0 +1,39 @@
+{% extends 'core/base.html' %}
+{% block title %}Booking History{% endblock %}
+{% block content %}
+<h2>Booking History</h2>
+<table class="table table-bordered mt-3">
+  <thead>
+    <tr>
+      <th>Station</th>
+      <th>Start</th>
+      <th>End</th>
+  <th>Hotel</th>
+  <th>Recommendations</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for r in history %}
+    <tr>
+      <td>{{ r.station.name }}</td>
+      <td>{{ r.start_time|date:"M d, Y H:i" }}</td>
+      <td>{{ r.end_time|date:"M d, Y H:i" }}</td>
+      <td>{{ r.booked_hotel|default:"-" }}</td>
+      <td>
+        {% if r.recommendations and r.recommendations|length > 0 %}
+          <ul>
+            {% for rec in r.recommendations %}
+              <li><strong>{{ rec.poi_name }}</strong> — {{ rec.category }} ({{ rec.distance_km|floatformat:1 }} km)</li>
+            {% endfor %}
+          </ul>poi_name
+        {% else %}
+          <span>-</span>
+        {% endif %}
+      </td>
+    </tr>
+    {% empty %}
+    <tr><td colspan="4">No previous bookings found.</td></tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

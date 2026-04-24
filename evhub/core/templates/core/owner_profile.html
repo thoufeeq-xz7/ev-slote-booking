@@ -1,0 +1,182 @@
+{% extends 'core/owner_base.html' %}
+{% block title %}Owner Profile - EVHub{% endblock %}
+
+{% block content %}
+
+<style>
+.profile-wrapper {
+    padding: 40px;
+}
+
+/* Header Section */
+.profile-header {
+    background: linear-gradient(135deg, #0d6efd, #5b9cff);
+    color: white;
+    padding: 30px;
+    border-radius: 15px;
+    margin-bottom: 30px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+}
+
+/* Card Styling */
+.modern-card {
+    border-radius: 15px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.06);
+    transition: 0.3s;
+}
+
+.modern-card:hover {
+    transform: translateY(-5px);
+}
+
+/* Form Controls */
+.modern-card input,
+.modern-card textarea {
+    border-radius: 10px !important;
+    border: 1px solid #dbe4f0;
+    padding: 10px 14px;
+}
+
+.modern-card input:focus,
+.modern-card textarea:focus {
+    border-color: #0d6efd;
+    box-shadow: 0 0 0 0.2rem rgba(13,110,253,.15);
+}
+
+/* Buttons */
+.btn-primary {
+    border-radius: 30px;
+    padding: 10px 20px;
+}
+
+.btn-secondary {
+    border-radius: 30px;
+}
+</style>
+
+<div class="profile-wrapper container-fluid">
+
+    <!-- Header -->
+    <div class="profile-header">
+        <h3>Owner Profile</h3>
+        <p class="mb-0">Manage your company information and account settings.</p>
+    </div>
+
+    <div class="row g-4">
+
+        <!-- Company Info -->
+        <div class="col-lg-8">
+            <div class="card modern-card border-0">
+                <div class="card-body p-4">
+                    <h5 class="mb-4">Company Information</h5>
+
+                    <form method="POST">
+                        {% csrf_token %}
+
+                        <div class="row g-3">
+
+                            <div class="col-md-6">
+                                <label class="form-label">Company Name</label>
+                                {{ form.company_name }}
+                                {% if form.company_name.errors %}
+                                    <div class="text-danger small">{{ form.company_name.errors }}</div>
+                                {% endif %}
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label">Company Email</label>
+                                {{ form.company_email }}
+                                {% if form.company_email.errors %}
+                                    <div class="text-danger small">{{ form.company_email.errors }}</div>
+                                {% endif %}
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label">Company Phone</label>
+                                {{ form.company_phone }}
+                                {% if form.company_phone.errors %}
+                                    <div class="text-danger small">{{ form.company_phone.errors }}</div>
+                                {% endif %}
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label">Registration Number</label>
+                                {{ form.registration_number }}
+                                {% if form.registration_number.errors %}
+                                    <div class="text-danger small">{{ form.registration_number.errors }}</div>
+                                {% endif %}
+                            </div>
+
+                            <div class="col-12">
+                                <label class="form-label">Company Address</label>
+                                {{ form.company_address }}
+                                {% if form.company_address.errors %}
+                                    <div class="text-danger small">{{ form.company_address.errors }}</div>
+                                {% endif %}
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label">Tax ID</label>
+                                {{ form.tax_id }}
+                                {% if form.tax_id.errors %}
+                                    <div class="text-danger small">{{ form.tax_id.errors }}</div>
+                                {% endif %}
+                            </div>
+
+                        </div>
+
+                        <div class="mt-4 d-flex gap-3">
+                            <button type="submit" class="btn btn-primary">
+                                Update Profile
+                            </button>
+                            <a href="{% url 'owner_dashboard' %}" class="btn btn-secondary">
+                                Back to Dashboard
+                            </a>
+                        </div>
+
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Account Summary -->
+        <div class="col-lg-4">
+            <div class="card modern-card border-0 bg-light">
+                <div class="card-body p-4">
+                    <h5 class="mb-3">👤 Account Details</h5>
+
+                    <p class="small mb-2">
+                        <strong>Username:</strong> {{ request.user.username }}
+                    </p>
+                    <p class="small mb-2">
+                        <strong>Email:</strong> {{ request.user.email }}
+                    </p>
+                    <p class="small mb-2">
+                        <strong>Phone:</strong> {{ request.user.phone }}
+                    </p>
+                    <p class="small mb-3">
+                        <strong>Account Created:</strong>
+                        {{ request.user.date_joined|date:"Y-m-d H:i" }}
+                    </p>
+
+                    <hr>
+
+                    <h6>Company Status</h6>
+                    {% if owner.is_verified %}
+                        <span class="badge bg-success px-3 py-2">
+                            ✅ Verified
+                        </span>
+                    {% else %}
+                        <span class="badge bg-warning text-dark px-3 py-2">
+                            ⏳ Pending Verification
+                        </span>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

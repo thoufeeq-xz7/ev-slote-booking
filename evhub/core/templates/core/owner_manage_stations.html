@@ -1,0 +1,73 @@
+{% extends 'core/owner_base.html' %}
+{% block title %}Manage Stations - EVHub Owner{% endblock %}
+
+{% block content %}
+<div style="display: flex; min-height: 100vh;">
+
+    <!-- Main Content -->
+    <div style="flex-grow: 1; margin-left: 250px; padding: 20px; background-color: #f7fafc;">
+        <div class="container-fluid">
+            <div class="row mb-4">
+                <div class="col-md-6">
+                    <h1>My Charging Stations</h1>
+                </div>
+                <div class="col-md-6 text-end">
+                    <a href="{% url 'owner_add_station' %}" class="btn btn-primary">+ Add New Station</a>
+                </div>
+            </div>
+
+            {% if owner_stations %}
+                <div class="row">
+                    {% for owner_station in owner_stations %}
+                    <div class="col-md-6 mb-4">
+                        <div class="card border-0 shadow-sm h-100">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-start mb-3">
+                                    <div>
+                                        <h5 class="card-title">⚡ {{ owner_station.station.name }}</h5>
+                                        <p class="card-text text-muted small">{{ owner_station.station.location }}</p>
+                                    </div>
+                                </div>
+
+                                <div class="row text-center mb-3">
+                                    <div class="col-6">
+                                        <small class="text-muted">Ports</small>
+                                        <h6>{{ owner_station.station.total_ports }}</h6>
+                                    </div>
+                                    <div class="col-6">
+                                        <small class="text-muted">Services</small>
+                                        <h6>{{ owner_station.services.count }}</h6>
+                                    </div>
+                                </div>
+
+                                <div class="mb-3">
+                                    {% if owner_station.station.ultra_fast %}
+                                        <span class="badge bg-warning">⚡ Ultra Fast</span>
+                                    {% endif %}
+                                    {% if owner_station.station.powered_by_renewables %}
+                                        <span class="badge bg-success">🌱 Renewable</span>
+                                    {% endif %}
+                                </div>
+
+                                <hr>
+
+                                <div class="d-grid gap-2">
+                                    <a href="{% url 'owner_manage_services' owner_station.id %}" class="btn btn-sm btn-info">Manage Services</a>
+                                    <a href="{% url 'owner_edit_station' owner_station.id %}" class="btn btn-sm btn-warning">Edit Station</a>
+                                    <a href="{% url 'owner_delete_station' owner_station.id %}" class="btn btn-sm btn-danger">Delete Station</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div class="alert alert-info" role="alert">
+                    <h4 class="alert-heading">No Stations Yet!</h4>
+                    <p>You haven't added any charging stations yet. <a href="{% url 'owner_add_station' %}">Click here to add your first station</a></p>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}
